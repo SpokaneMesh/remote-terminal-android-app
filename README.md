@@ -1,17 +1,34 @@
-# meshterm
+# MeshTerm — Android App
 
-MeshTerm — RemoteTerm for MeshCore mobile client
+A native Android client for [Remote Terminal for MeshCore](https://github.com/jkingsman/Remote-Terminal-for-MeshCore) by [@jkingsman](https://github.com/jkingsman).
 
-## Getting Started
+## What it does
 
-This project is a starting point for a Flutter application.
+RemoteTerm exposes a web UI for managing MeshCore mesh radio networks. This app wraps that UI in a native Android shell that:
 
-A few resources to get you started if this is your first Flutter project:
+- Stores your server credentials securely in the Android keychain
+- Injects HTTP Basic Auth automatically — no browser popup on every launch
+- Shows a slim persistent toolbar so the settings gear never overlaps web UI controls
+- Handles connection errors with a retry/settings fallback screen
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Requirements
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- A running [RemoteTerm](https://github.com/jkingsman/Remote-Terminal-for-MeshCore) instance accessible from your device (e.g. via VPN)
+- Android 5.0+
+
+## Building
+
+```bash
+flutter pub get
+flutter build apk --release
+# APK: build/app/outputs/flutter-apk/app-release.apk
+```
+
+## First launch
+
+Enter your RemoteTerm server URL (e.g. `https://your-server/`), username, and password. Credentials are saved to the device keychain and used automatically on every subsequent launch.
+
+## Related
+
+- [Remote Terminal for MeshCore](https://github.com/jkingsman/Remote-Terminal-for-MeshCore) — the server this app connects to
+- [MeshCore](https://github.com/ripplebiz/MeshCore) — the mesh radio firmware
