@@ -69,27 +69,33 @@ class _WebViewScreenState extends State<WebViewScreen> {
     }
 
     return Scaffold(
-      appBar: _hasError || _loading
-          ? AppBar(
-              title: const Text('MeshTerm'),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: _openSettings,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.refresh),
-                  onPressed: _reload,
-                ),
-              ],
-              bottom: _loading && !_hasError
-                  ? PreferredSize(
-                      preferredSize: const Size.fromHeight(2),
-                      child: LinearProgressIndicator(value: _loadProgress > 0 ? _loadProgress / 100 : null),
-                    )
-                  : null,
-            )
-          : null,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(30),
+        child: AppBar(
+          toolbarHeight: 30,
+          title: _loading && !_hasError
+              ? LinearProgressIndicator(
+                  value: _loadProgress > 0 ? _loadProgress / 100 : null,
+                )
+              : null,
+          centerTitle: true,
+          actions: [
+            if (!_loading && !_hasError)
+              IconButton(
+                icon: const Icon(Icons.refresh, size: 20),
+                onPressed: _reload,
+                padding: EdgeInsets.zero,
+                visualDensity: VisualDensity.compact,
+              ),
+            IconButton(
+              icon: const Icon(Icons.settings, size: 20),
+              onPressed: _openSettings,
+              padding: EdgeInsets.zero,
+              visualDensity: VisualDensity.compact,
+            ),
+          ],
+        ),
+      ),
       body: Stack(
         children: [
           InAppWebView(
@@ -162,12 +168,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
             const Center(child: CircularProgressIndicator()),
         ],
       ),
-      floatingActionButton: !_loading && !_hasError
-          ? FloatingActionButton.small(
-              onPressed: _openSettings,
-              child: const Icon(Icons.settings),
-            )
-          : null,
     );
   }
 }

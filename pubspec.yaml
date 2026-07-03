@@ -38,6 +38,10 @@ dependencies:
   connectivity_plus: ^6.0.3
   http: ^1.2.2
 
+dependency_overrides:
+  flutter_inappwebview_android:
+    path: patches/flutter_inappwebview_android
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

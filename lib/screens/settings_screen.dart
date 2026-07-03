@@ -86,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 controller: _urlController,
                 decoration: const InputDecoration(
                   labelText: 'Server URL',
-                  hintText: 'http://100.69.69.1:8000',
+                  hintText: 'https://mcremote.lcnb.cc',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.link),
                 ),
