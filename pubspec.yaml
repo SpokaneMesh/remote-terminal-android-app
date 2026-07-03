@@ -38,6 +38,11 @@ dependencies:
   connectivity_plus: ^6.0.3
   http: ^1.2.2
 
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon.png"
+
 dependency_overrides:
   flutter_inappwebview_android:
     path: patches/flutter_inappwebview_android
