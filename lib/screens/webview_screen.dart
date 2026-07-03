@@ -96,7 +96,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
           ],
         ),
       ),
-      body: Stack(
+      body: SafeArea(
+        top: false,
+        child: Stack(
         children: [
           InAppWebView(
             initialUrlRequest: URLRequest(url: WebUri(_serverUrl!)),
@@ -167,6 +169,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           if (!_hasError && _loading && _loadProgress == 0)
             const Center(child: CircularProgressIndicator()),
         ],
+        ),
       ),
     );
   }
