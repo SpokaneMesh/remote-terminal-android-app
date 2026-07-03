@@ -12,6 +12,7 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen> {
   InAppWebViewController? _webViewController;
+  PullToRefreshController? _pullToRefreshController;
   String? _serverUrl;
   String? _username;
   String? _password;
@@ -32,7 +33,17 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void initState() {
     super.initState();
+    _pullToRefreshController = PullToRefreshController(
+      settings: PullToRefreshSettings(color: const Color(0xFF4CAF50)),
+      onRefresh: () => _webViewController?.reload(),
+    );
     _loadSettings();
+  }
+
+  @override
+  void dispose() {
+    _pullToRefreshController?.dispose();
+    super.dispose();
   }
 
   Future<void> _loadSettings() async {
@@ -70,20 +81,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
     _webViewController?.evaluateJavascript(source: """
 (function() {
-  function injectRefreshButton() {
-    const header = document.querySelector('header');
-    if (!header || document.getElementById('app-refresh-btn')) return;
-    const statusEl = header.querySelector('[role="status"]');
-    if (!statusEl) return;
-    const btn = document.createElement('button');
-    btn.id = 'app-refresh-btn';
-    btn.title = 'Refresh';
-    btn.innerHTML = '&#8635;';
-    btn.style.cssText = 'background:none;border:none;cursor:pointer;color:inherit;font-size:22px;padding:0 4px;opacity:0.75;line-height:1;margin-left:4px;vertical-align:middle;';
-    btn.addEventListener('click', () => window.location.reload());
-    statusEl.insertAdjacentElement('afterend', btn);
-  }
-
   function injectConnectionSection() {
     if (document.getElementById('app-connection-section')) return;
 
@@ -148,10 +145,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     });
   }
 
-  injectRefreshButton();
-
   const observer = new MutationObserver(() => {
-    injectRefreshButton();
     injectConnectionSection();
   });
   observer.observe(document.body, { childList: true, subtree: true });
@@ -172,6 +166,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
             InAppWebView(
               initialUrlRequest: URLRequest(url: WebUri(_serverUrl!)),
               initialSettings: _webViewSettings,
+              pullToRefreshController: _pullToRefreshController,
               onWebViewCreated: (controller) {
                 _webViewController = controller;
                 controller.addJavaScriptHandler(
@@ -212,6 +207,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
               },
               onLoadStop: (controller, url) {
                 setState(() => _loading = false);
+                _pullToRefreshController?.endRefreshing();
                 _injectUI();
               },
               onProgressChanged: (controller, progress) {
@@ -222,6 +218,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   _loading = false;
                   _hasError = true;
                 });
+                _pullToRefreshController?.endRefreshing();
               },
             ),
             if (_loading && !_hasError)
